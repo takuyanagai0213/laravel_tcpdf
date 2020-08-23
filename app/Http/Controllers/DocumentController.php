@@ -33,24 +33,27 @@ class DocumentController extends Controller
         // $data['test03'] = "03 - あいうえお - right";
 
         // $data=null;
-        $datas['date'] = [
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01",
-            "2020/08/01"
-        ];
-        $datas['equipments'] = ['機器A', '機器A', '機器A', '機器A', '機器A', '機器A'];
+        for($i=1;$i<31;$i++){
+            $date="2020/08/".$i;
+            $datas['date'][$i]=$date;
+        }
+        for($i=1;$i<15;$i++){
+            $equipment="機器".$i;
+            $datas['equipments'][$i]=$equipment;
+        }
+
+        for($i=1;$i<10;$i++){
+            $temp_type="温度";
+            $datas['temp_type'][$i]=$temp_type;
+        }
+
+        foreach($datas['equipments'] as $key => $equipment){
+            // $datas['temp'][$key]=array();
+            for($i=1;$i<30;$i++){
+                $temp="30℃";
+                $datas['temp'][$key][$i]=$temp;
+            }
+        }
         // PDF 生成メイン　－　A4 縦に設定
         $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8" );
         $pdf->setPrintHeader(false);
@@ -64,7 +67,7 @@ class DocumentController extends Controller
 
         // ページ追加
         $pdf->addPage();
-        // error_log(print_r($datas,true),3, "/Users/takuya/myaaa/debug.log");
+        error_log(print_r($datas,true),3, "/Users/takuya/myaaa/debug.log");
         // HTMLを描画、viewの指定と変数代入 - pdf_test.blade.php
         $pdf->writeHTML(view("pdf_test")->with('datas', $datas)->render());
 
