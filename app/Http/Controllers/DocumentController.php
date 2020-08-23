@@ -37,7 +37,7 @@ class DocumentController extends Controller
             $date="2020/08/".$i;
             $datas['date'][$i]=$date;
         }
-        for($i=1;$i<15;$i++){
+        for($i=1;$i<5;$i++){
             $equipment="機器".$i;
             $datas['equipments'][$i]=$equipment;
         }
@@ -51,7 +51,11 @@ class DocumentController extends Controller
             // $datas['temp'][$key]=array();
             for($i=1;$i<30;$i++){
                 $temp="30℃";
-                $datas['temp'][$key][$i]=$temp;
+                $datas['temp'][$key]['temp_up'][$i]=$temp;
+            }
+            for($i=1;$i<30;$i++){
+                $temp="30℃";
+                $datas['temp'][$key]['temp_down'][$i]=$temp;
             }
         }
         // PDF 生成メイン　－　A4 縦に設定
