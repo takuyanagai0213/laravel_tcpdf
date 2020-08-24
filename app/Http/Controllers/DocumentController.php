@@ -27,37 +27,34 @@ class DocumentController extends Controller
 
     public function downloadPdf()
     {
-        // ダミーデータ設定
-        // $datas['test01'] = "01 - あいうえお - left";
-        // $data['test02'] = "02 - あいうえお - center";
-        // $data['test03'] = "03 - あいうえお - right";
 
-        // $data=null;
+        for($i=1;$i<9;$i++){
+            $equipment="機器".$i;
+            $datas['equipments'][$i]['NAME']=$equipment;
+            $datas['equipments'][$i]['id']=$i;
+            foreach($datas['equipments'] as $key => $equipment){
+                $datas['equipments'][$i]['id']=$i;
+            }
+        }
+
+        // error_log(print_r($datas,true),3, "/Users/takuya/myaaa/debug.log");
         for($i=1;$i<31;$i++){
             $date="2020/08/".$i;
             $datas['date'][$i]=$date;
         }
-        for($i=1;$i<5;$i++){
-            $equipment="機器".$i;
-            $datas['equipments'][$i]=$equipment;
-        }
 
-        for($i=1;$i<10;$i++){
-            $temp_type="温度";
-            $datas['temp_type'][$i]=$temp_type;
-        }
-
-        foreach($datas['equipments'] as $key => $equipment){
-            // $datas['temp'][$key]=array();
-            for($i=1;$i<30;$i++){
-                $temp="30℃";
-                $datas['temp'][$key]['temp_up'][$i]=$temp;
-            }
-            for($i=1;$i<30;$i++){
-                $temp="30℃";
-                $datas['temp'][$key]['temp_down'][$i]=$temp;
+        $timeLabel = ['10:00','15:00','19:00'];
+        foreach($datas['date'] as $date){
+            foreach($datas['equipments'] as $equipment){
+                foreach($timeLabel as $label){
+                    $id = $equipment['id'];
+                    $pdfStruct[$date][$id][$label] = "50.5";
+                }
             }
         }
+
+        error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
+
         // PDF 生成メイン　－　A4 縦に設定
         $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8" );
         $pdf->setPrintHeader(false);
@@ -67,14 +64,36 @@ class DocumentController extends Controller
         $pdf->SetTitle('Title aiueo あいうえお');
 
         // 日本語フォント設定
-        $pdf->setFont('kozminproregular','',10);
+        $pdf->setFont('kozminproregular','',5);
 
         // ページ追加
         $pdf->addPage();
-        error_log(print_r($datas,true),3, "/Users/takuya/myaaa/debug.log");
-        // HTMLを描画、viewの指定と変数代入 - pdf_test.blade.php
-        $pdf->writeHTML(view("pdf_test")->with('datas', $datas)->render());
+        // セルを使って表を描いていく
+        $pdf->SetFillColor(0, 191, 255);
 
+        $pdf->Cell(15,5,"",1,0,'L');
+        foreach($datas['equipments'] as $equipment){
+            $pdf->MultiCell(30,5,$equipment['NAME'],1,0,1,'L');
+        }
+        $pdf->Cell(1,5,"",1,1,'L');
+        
+        $pdf->Cell(15,5,"日付",1,0,'L');
+        for($i=0;$i<count($datas['equipments']);$i++){
+            foreach($timeLabel as $label){
+                $pdf->Cell(10,5,$label,1,0,'L');
+            }
+        }
+        $pdf->Cell(1,5,"",1,1,'L');
+
+        foreach($pdfStruct as $date => $line){
+            $pdf->Cell(15,5,$date,1,0,'L');
+            foreach($line as $id => $temp){
+                foreach($temp as $temp_label => $temp_data){
+                    $pdf->Cell(10,5,$temp_data,1,0,'L');
+                }
+            }
+            $pdf->Cell(1,5,"",1,1,'L');
+        }
         // 出力指定 ファイル名、拡張子、D(ダウンロード)
         $pdf->output('test' . '.pdf', 'D');
         return;
