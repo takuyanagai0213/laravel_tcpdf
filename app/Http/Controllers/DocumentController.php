@@ -54,6 +54,7 @@ class DocumentController extends Controller
         }
 
         error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
+        error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
 
         // PDF 生成メイン　－　A4 縦に設定
         $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8" );
