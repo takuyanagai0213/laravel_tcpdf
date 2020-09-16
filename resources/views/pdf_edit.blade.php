@@ -10,7 +10,6 @@
 <h1>PDFダウンロード</h1>
  
 <table id=test border="1"></table>
-
 <form action="{{ url('/pdf')}}" method="POST">
     {{ csrf_field() }}
     <!-- <div><textarea rows="6" name="message"></textarea></div> -->
