@@ -14,6 +14,10 @@ class DocumentController extends Controller
     {
         return view('pdf');
     }
+    public function edit()
+    {
+        return view('pdf_edit');
+    }
 
     public function postHoge(){
         if (Request::get('pdf')){
@@ -53,6 +57,7 @@ class DocumentController extends Controller
             }
         }
 
+        return response()->json($pdfStruct);
         error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
         error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
 

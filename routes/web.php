@@ -19,3 +19,6 @@ Route::get('/', function () {
 
 Route::get('/pdf', 'DocumentController@index');
 Route::post('/pdf', 'DocumentController@postHoge');
+
+Route::get('/pdf_edit', 'DocumentController@edit');
+Route::get('/DocumentController/downloadPdf', 'DocumentController@downloadPdf');
