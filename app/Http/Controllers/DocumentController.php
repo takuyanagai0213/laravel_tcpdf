@@ -31,6 +31,8 @@ class DocumentController extends Controller
 
     public function downloadPdf()
     {
+        
+        error_log(print_r($_POST,true),3, "/Users/takuya/myaaa/debug.log");
 
         for($i=1;$i<9;$i++){
             $equipment="機器".$i;
@@ -41,7 +43,6 @@ class DocumentController extends Controller
             }
         }
 
-        // error_log(print_r($datas,true),3, "/Users/takuya/myaaa/debug.log");
         for($i=1;$i<31;$i++){
             $date="2020/08/".$i;
             $datas['date'][$i]=$date;
@@ -57,9 +58,9 @@ class DocumentController extends Controller
             }
         }
 
-        return response()->json($pdfStruct);
-        error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
-        error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
+        // return response()->json($pdfStruct);
+        // error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
+        // error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
 
         // PDF 生成メイン　－　A4 縦に設定
         $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8" );
@@ -101,13 +102,15 @@ class DocumentController extends Controller
             $pdf->Cell(1,5,"",1,1,'L');
         }
         // 出力指定 ファイル名、拡張子、D(ダウンロード)
-        $pdf->output('test' . '.pdf', 'D');
-        return;
+        // $pdf->output('test' . '.pdf', 'F');
+        // $pdf->output('/Users/takuya/test1' . '.pdf', 'F');
+        
+        return response()->json($pdfStruct);
    }
 
    public function outputCSV(){
         error_log(print_r("hello",true),3, "/Users/takuya/myaaa/debug.log");
-        return;
+        return response()->test;
 
    }
 }
