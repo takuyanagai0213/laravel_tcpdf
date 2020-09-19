@@ -1,23 +1,22 @@
 $(function() {
-  var csrf = $('#_token').val(); 
-$.ajax({
-  type:"POST",
-  url:"downloadPdf",
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  },
-  success: function(pdfStruct){
-   console.log(pdfStruct)
-   console.log("ok")
-  },
-  error: function(){
-   console.log("ng")
-  }  
+  $('#pdf').on('click',function(){
 
+    $.getJSON("/createPDFdata",function(json){
+      console.log(json)
+      var csrf = $('#_token').val(); 
+      $.ajax({
+        type:"POST",
+        url:"createPDF",
+        data:json,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+      })
+    })
+    setTimeout(function(){
+      $('#pdf').attr('type', 'submit');
+      $('#form').submit();
+      $('#pdf').attr('type', 'button');
+    },1000);
 })
-// $.getJSON('/DocumentController/downloadPdf',function() {
-//   console.log("hello")
-// })
-
-console.log("hello")
 })

@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use TCPDF;
 use TCPDF_FONTS;
-use Request;
-
 
 class DocumentController extends Controller
 {
@@ -19,51 +17,57 @@ class DocumentController extends Controller
         return view('pdf_edit');
     }
 
-    public function postHoge(){
-        if (Request::get('pdf')){
-            $this->downloadPdf();
-        }elseif (Request::get('csv')){
-            $this->outputCSV();
-        }
 
-        return view('pdf');
-    }
-
-    public function downloadPdf()
+    public function createPDFdata(Request $request)
     {
+        // error_log(print_r($_POST,true),3, "/Users/takuya/myaaa/debug.log");
+        $target_DT = substr("2020/09/01",0,7).'/01';
+
+        $target_TS = strtotime($target_DT);
         
-        error_log(print_r($_POST,true),3, "/Users/takuya/myaaa/debug.log");
+        $finishTS = $target_TS + 60*60*24*32;
 
+        $dates = array();
+        for($i = $target_TS; $i < $finishTS; $i++){
+            if(date('Y/m/01',$i) !== $target_DT)continue;
+            $DT = strval(date('Y/m/d',$i));
+            array_push($dates, $DT);
+            $i += 60*60*24;
+        }
+        $page = 1;
+        $equipment_count = 0;
         for($i=1;$i<9;$i++){
-            $equipment="機器".$i;
-            $datas['equipments'][$i]['NAME']=$equipment;
-            $datas['equipments'][$i]['id']=$i;
-            foreach($datas['equipments'] as $key => $equipment){
-                $datas['equipments'][$i]['id']=$i;
+            if($equipment_count >= 4){
+                $equipment_count = 0;
+                $page++;
             }
+            $equipment="機器".$i;
+            $pdfStruct[$page]['equipments'][$i]['NAME']=$equipment;
+            $pdfStruct[$page]['equipments'][$i]['id']=$i;
+            $equipment_count++;
         }
-
-        for($i=1;$i<31;$i++){
-            $date="2020/08/".$i;
-            $datas['date'][$i]=$date;
-        }
-
+        // error_log(print_r($pdfStruct,true),3, "/Users/takuya/myaaa/debug.log");
         $timeLabel = ['10:00','15:00','19:00'];
-        foreach($datas['date'] as $date){
-            foreach($datas['equipments'] as $equipment){
-                foreach($timeLabel as $label){
-                    $id = $equipment['id'];
-                    $pdfStruct[$date][$id][$label] = "50.5";
+        $equipment_count = 0;
+        foreach($pdfStruct as $page => $equipmentPerPage){
+            foreach($equipmentPerPage['equipments'] as $equipment){
+                $id = $equipment['id'];
+                foreach($dates as $date){
+                    foreach($timeLabel as $label){
+                        $pdfStruct[$page]['data'][$date][$id][$label] = "50.5";
+                    }
                 }
             }
         }
-
-        // return response()->json($pdfStruct);
-        // error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
-        // error_log(print_r($datas['equipments'],true),3, "/Users/takuya/myaaa/debug.log");
+        return response()->json($pdfStruct);
+    }
+    public function createPDF(Request $request)
+    {
+        $pdfStruct = $_POST;
+        $timeLabel = ['10:00','15:00','19:00'];
 
         // PDF 生成メイン　－　A4 縦に設定
-        $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8" );
+        $pdf = new TCPDF("P", "mm", "A4", true, "UTF-8" );
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
 
@@ -79,38 +83,40 @@ class DocumentController extends Controller
         $pdf->SetFillColor(0, 191, 255);
 
         $pdf->Cell(15,5,"",1,0,'L');
-        foreach($datas['equipments'] as $equipment){
-            $pdf->MultiCell(30,5,$equipment['NAME'],1,0,1,'L');
-        }
-        $pdf->Cell(1,5,"",1,1,'L');
-        
-        $pdf->Cell(15,5,"日付",1,0,'L');
-        for($i=0;$i<count($datas['equipments']);$i++){
-            foreach($timeLabel as $label){
-                $pdf->Cell(10,5,$label,1,0,'L');
+        // $page = 1;
+        foreach($pdfStruct as $page => $pagePerData){
+            
+            foreach($pagePerData['equipments'] as $equipment){
+                $pdf->MultiCell(30,5,$equipment['NAME'],1,0,1,'L');
             }
-        }
-        $pdf->Cell(1,5,"",1,1,'L');
-
-        foreach($pdfStruct as $date => $line){
-            $pdf->Cell(15,5,$date,1,0,'L');
-            foreach($line as $id => $temp){
-                foreach($temp as $temp_label => $temp_data){
-                    $pdf->Cell(10,5,$temp_data,1,0,'L');
+            $pdf->Cell(1,5,"",1,1,'L');
+            
+            $pdf->Cell(15,5,"日付",1,0,'L');
+            for($i=0;$i<count($pagePerData['equipments']);$i++){
+                foreach($timeLabel as $label){
+                    $pdf->Cell(10,5,$label,1,0,'L');
                 }
             }
             $pdf->Cell(1,5,"",1,1,'L');
+            
+            foreach($pagePerData['data'] as $date => $line){
+                $pdf->Cell(15,5,$date,1,0,'L');
+                foreach($line as $id => $temp){
+                    foreach($temp as $temp_label => $temp_data){
+                        $pdf->Cell(10,5,$temp_data,1,0,'L');
+                    }
+                }
+                $pdf->Cell(1,5,"",1,1,'L');
+            }
+            $pdf->addPage();
         }
+
         // 出力指定 ファイル名、拡張子、D(ダウンロード)
-        // $pdf->output('test' . '.pdf', 'F');
-        // $pdf->output('/Users/takuya/test1' . '.pdf', 'F');
-        
-        return response()->json($pdfStruct);
-   }
-
-   public function outputCSV(){
-        error_log(print_r("hello",true),3, "/Users/takuya/myaaa/debug.log");
-        return response()->test;
-
-   }
+        $pdf->output('/Users/takuya/myaaa/test' . '.pdf', 'F'); 
+        return;
+    }
+    public function downloadPDF(Request $request)
+    {
+        return response()->download('/Users/takuya/myaaa/test.pdf')->deleteFileAfterSend(true);
+    }
 }

@@ -19,7 +19,9 @@ Route::get('/', function () {
 
 Route::get('/pdf', 'DocumentController@index');
 // Route::post('/pdf', 'DocumentController@postHoge');
-Route::post('/downloadPdf', 'DocumentController@downloadPdf');
+Route::get('/createPDFdata', 'DocumentController@createPDFdata');
+Route::post('/createPDF', 'DocumentController@createPDF');
+Route::post('/downloadPDF', 'DocumentController@downloadPDF');
 
 Route::get('/pdf_edit', 'DocumentController@edit');
 Route::get('/DocumentController/downloadPdf', 'DocumentController@downloadPdf');

@@ -6,18 +6,16 @@
 <meta charset="utf-8">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title></title>
-<input type="hidden" id="_token" name="_token" value="{$csrf_token}" />
 
 
 </head>
 <body>
 <h1>PDFダウンロード</h1>
  
-<form action="{{ url('/pdf')}}" method="POST">
+<form action="{{ url('/downloadPDF')}}" method="POST" id="form">
     {{ csrf_field() }}
-    <!-- <div><textarea rows="6" name="message"></textarea></div> -->
-    <div><input type="submit" name="pdf" value="PDFダウンロード"></div>
-    <div><input type="submit" name="csv" value="CSVダウンロード"></div>
+    <div><input type="button" id="pdf" value="PDFダウンロード"></div>
+    <!-- <input type="hidden" id="_token" name="_token" value="{$csrf_token}" /> -->
 </form>
  
 </body>
