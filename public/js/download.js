@@ -1,13 +1,21 @@
 $(function() {
   $('#pdf').on('click',function(){
-
-    $.getJSON("/createPDFdata",function(json){
+    var data ={
+      flag:"js"
+    }
+    $.getJSON("/createPDFdata",data,function(json){
       console.log(json)
+      var data ={
+        id: "3",
+        date:"2020/09/07",
+        time:"10:00",
+        temp:"80"
+      }
       var csrf = $('#_token').val(); 
       $.ajax({
         type:"POST",
         url:"createPDF",
-        data:json,
+        data:data,
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },

@@ -20,7 +20,6 @@ class DocumentController extends Controller
 
     public function createPDFdata(Request $request)
     {
-        // error_log(print_r($_POST,true),3, "/Users/takuya/myaaa/debug.log");
         $target_DT = substr("2020/09/01",0,7).'/01';
 
         $target_TS = strtotime($target_DT);
@@ -36,7 +35,7 @@ class DocumentController extends Controller
         }
         $page = 1;
         $equipment_count = 0;
-        for($i=1;$i<9;$i++){
+        for($i=1;$i<100;$i++){
             if($equipment_count >= 4){
                 $equipment_count = 0;
                 $page++;
@@ -59,11 +58,39 @@ class DocumentController extends Controller
                 }
             }
         }
-        return response()->json($pdfStruct);
+        // error_log(print_r(filesize($pdfStruct),true),3, "/Users/takuya/myaaa/debug.log");
+        // if(isset($request->flag)){
+        //     error_log(print_r("hello1",true),3, "/Users/takuya/myaaa/debug.log");
+        //     return response()->json($pdfStruct);
+        // }else{
+        //     error_log(print_r("hello",true),3, "/Users/takuya/myaaa/debug.log");
+
+            return $pdfStruct;
+        // }
     }
     public function createPDF(Request $request)
     {
-        $pdfStruct = $_POST;
+        error_log(print_r($_POST,true),3, "/Users/takuya/myaaa/debug.log");
+        // if(){
+            
+            // }
+        $pdfStruct = $this->createPDFdata($request);
+
+        foreach($pdfStruct as $page => $pagePerData){
+            foreach($pagePerData['data'] as $date => $tempPerEquip){
+                if($_POST['date'] !== $date)continue;
+                foreach($tempPerEquip as $id => $tempAll){
+                    if(intval($_POST['id']) !== intval($id))continue;
+                    foreach($tempAll as $timeLabel => $temp){
+                        if($_POST['time'] !== $timeLabel)continue;
+                        $pdfStruct[$page]['data'][$date][$id][$timeLabel] = $_POST['temp'];
+                    }
+                }
+            }
+        }
+        error_log(print_r($pdfStruct,true),3, "/Users/takuya/myaaa/debug.log");
+
+        // $pdfStruct = $_POST;
         $timeLabel = ['10:00','15:00','19:00'];
 
         // PDF 生成メイン　－　A4 縦に設定
