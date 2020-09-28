@@ -11,20 +11,26 @@ $(function() {
         time:"10:00",
         temp:"80"
       }
-      var csrf = $('#_token').val(); 
-      $.ajax({
-        type:"POST",
-        url:"createPDF",
-        data:data,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-      })
+      if(json !== 'error'){
+        function test(){
+          return $.ajax({
+            type:"POST",
+            url:"createPDF",
+            data:data,
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+          })
+        }
+        test().done(function(response){
+          console.log(response)
+          $('#pdf').attr('type', 'submit');
+          $('#form').submit();
+          $('#pdf').attr('type', 'button');
+        }).fail(function(){
+          console.log('fail')
+        })
+      }
     })
-    setTimeout(function(){
-      $('#pdf').attr('type', 'submit');
-      $('#form').submit();
-      $('#pdf').attr('type', 'button');
-    },1000);
 })
 })

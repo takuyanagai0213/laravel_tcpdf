@@ -25,8 +25,13 @@ class DocumentController extends Controller
         $target_TS = strtotime($target_DT);
         
         $finishTS = $target_TS + 60*60*24*32;
+        error_log(print_r("hello",true),3, "/Users/takuya/myaaa/debug.log");
 
         $dates = array();
+        // if(empty($dates)){
+        //     $message = 'error';
+        //     return response()->json($message);
+        // }
         for($i = $target_TS; $i < $finishTS; $i++){
             if(date('Y/m/01',$i) !== $target_DT)continue;
             $DT = strval(date('Y/m/d',$i));
@@ -61,7 +66,7 @@ class DocumentController extends Controller
         // error_log(print_r(filesize($pdfStruct),true),3, "/Users/takuya/myaaa/debug.log");
         // if(isset($request->flag)){
         //     error_log(print_r("hello1",true),3, "/Users/takuya/myaaa/debug.log");
-        //     return response()->json($pdfStruct);
+            // return response()->json($pdfStruct);
         // }else{
         //     error_log(print_r("hello",true),3, "/Users/takuya/myaaa/debug.log");
 
@@ -140,7 +145,8 @@ class DocumentController extends Controller
 
         // 出力指定 ファイル名、拡張子、D(ダウンロード)
         $pdf->output('/Users/takuya/myaaa/test' . '.pdf', 'F'); 
-        return;
+        $message = 'success';
+        return response()->json($message);
     }
     public function downloadPDF(Request $request)
     {
