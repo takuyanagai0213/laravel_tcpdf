@@ -40,7 +40,7 @@ class DocumentController extends Controller
         }
         $page = 1;
         $equipment_count = 0;
-        for($i=1;$i<100;$i++){
+        for($i=1;$i<1000;$i++){
             if($equipment_count >= 4){
                 $equipment_count = 0;
                 $page++;
