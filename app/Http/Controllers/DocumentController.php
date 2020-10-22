@@ -152,4 +152,11 @@ class DocumentController extends Controller
     {
         return response()->download('/Users/takuya/myaaa/test.pdf')->deleteFileAfterSend(true);
     }
+
+    public function get_profile(Request $request) {
+        header("Access-Control-Allow-Origin: *");  //CORS
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With");
+        $profiles = array('test','test');
+        return response()->json($profiles[0]);
+    }
 }
