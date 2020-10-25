@@ -25,3 +25,4 @@ Route::post('/downloadPDF', 'DocumentController@downloadPDF');
 
 Route::get('/pdf_edit', 'DocumentController@edit');
 Route::get('/profile', 'DocumentController@get_profile');
+Route::get('/getConference', 'conf@getConference'); 
