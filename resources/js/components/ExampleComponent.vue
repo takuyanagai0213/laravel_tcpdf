@@ -7,7 +7,6 @@
                         {{ room_info['ROOM_NAME'] }}
                     </div>
                 </li>
-        {{info}}
         <!-- <ul v-for="conf in info[room]" :key="conf['ROOM_NAME']">
             {{ conf['ROOM_NAME'] }}
         </ul> -->

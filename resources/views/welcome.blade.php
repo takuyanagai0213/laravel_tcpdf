@@ -16,6 +16,8 @@
     <!-- <form action="/profile" method="POST">
         <input type="sumbit" >
     </form> -->
-    <script src="{{ mix('/js/app.js')  }}"></script>
+    <!-- <script src="{{ mix('/js/app.js')  }}"></script> -->
+    <script src="{{ ('/js/test.js')  }}"></script>
+    <script src="{{ ('/js/test2.js')  }}"></script>
     </body>
 </html>
