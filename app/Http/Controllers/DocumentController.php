@@ -18,7 +18,7 @@ class DocumentController extends Controller
     }
 
 
-    public function createPDFdata(Request $request)
+    public function createPDFdata()
     {
         $target_DT = substr("2020/09/01", 0, 7).'/01';
 
@@ -134,7 +134,7 @@ class DocumentController extends Controller
             foreach ($pagePerData['data'] as $date => $line) {
                 $pdf->Cell(15, 5, $date, 1, 0, 'L');
                 foreach ($line as $id => $temp) {
-                    foreach ($temp as $temp_label => $temp_data) {
+                    foreach ($temp as $temp_data) {
                         $pdf->Cell(10, 5, $temp_data, 1, 0, 'L');
                     }
                 }
@@ -148,12 +148,12 @@ class DocumentController extends Controller
         $message = 'success';
         return response()->json($message);
     }
-    public function downloadPDF(Request $request)
+    public function downloadPDF()
     {
         return response()->download('/Users/takuya/myaaa/test.pdf')->deleteFileAfterSend(true);
     }
 
-    public function get_profile(Request $request)
+    public function get_profile()
     {
         header("Access-Control-Allow-Origin: *");  //CORS
         header("Access-Control-Allow-Headers: Origin, X-Requested-With");
