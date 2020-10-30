@@ -56,5 +56,4 @@ class conf extends Controller
         );
         return response()->json($room_info);
     }
-
 }
